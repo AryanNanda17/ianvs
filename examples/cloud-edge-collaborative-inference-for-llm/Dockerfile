@@ -9,8 +9,11 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     git \
-    git-lfs && \
-    git lfs install
+    unzip 
+
+# Copy kaggle.json (Make sure this file is in the same directory as your Dockerfile)
+COPY kaggle.json /root/.kaggle/kaggle.json
+RUN chmod 600 /root/.kaggle/kaggle.json
 
 # Clone Ianvs repo
 RUN git clone https://github.com/kubeedge/ianvs.git
@@ -26,16 +29,17 @@ RUN /bin/bash -c "source activate $CONDA_ENV && \
     pip install -r examples/cloud-edge-collaborative-inference-for-llm/requirements.txt && \
     python setup.py install"
 
-# Download and move dataset (still run inside /ianvs)
+# Download Kaggle CLI
+RUN pip install kaggle
+
+# Download dataset
 RUN cd /ianvs && \
-    git clone https://huggingface.co/datasets/FuryMartin/Ianvs-MMLU-5-shot && \
-    git lfs install && \
-    cd Ianvs-MMLU-5-shot && \
-    git lfs pull && \
-    mkdir -p /ianvs/dataset && \
-    mv mmlu-5-shot /ianvs/dataset/ && \
-    mv workspace-mmlu /ianvs/ && \
-    rm -rf Ianvs-MMLU-5-shot  # Optional cleanup
+    kaggle datasets download -d kubeedgeianvs/ianvs-mmlu-5shot && \
+    kaggle datasets download -d kubeedgeianvs/ianvs-gpqa-diamond && \
+    unzip -o ianvs-mmlu-5shot.zip && \
+    unzip -o ianvs-gpqa-diamond.zip && \
+    rm -rf ianvs-mmlu-5shot.zip && \
+    rm -rf ianvs-gpqa-diamond.zip
 
 # Set final working directory
 WORKDIR /ianvs
