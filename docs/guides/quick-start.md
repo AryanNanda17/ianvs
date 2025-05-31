@@ -35,31 +35,43 @@ In this example, we are using the Linux platform with **Python 3.8**. If you are
 
 The Docker-based setup assumes you have Docker installed on your system and are using an Ubuntu-based Linux distribution.
 
-**Note**: If you don't have Docker installed, follow the Docker Engine installation guide [here](https://docs.docker.com/engine/install/ubuntu/). 
+**Note**: 
+- If you don't have Docker installed, follow the Docker Engine installation guide [here](https://docs.docker.com/engine/install/ubuntu/). 
+- To enable Docker to download datasets from Kaggle within your docker container, you need to configure the Kaggle CLI authentication token. Please follow the [official Kaggle API documentation](https://www.kaggle.com/docs/api#:~:text=is%20%24PYTHON_HOME/Scripts.-,Authentication,-In%20order%20to) to download your `kaggle.json` token. Once downloaded, move the file to the `~/ianvs/examples/cloud-edge-collaborative-inference-for-llm/` directory after doing step 1(cloning the ianvs repo):
 
-1. From the root directory of Ianvs, build the `cloud-edge-collaborative-inference-for-llm` Docker image:
+```bash
+mv /path/to/kaggle.json ~/ianvs/examples/cloud-edge-collaborative-inference-for-llm/
+```
+
+1. Clone Ianvs Repo
+```
+git clone https://github.com/kubeedge/ianvs.git
+cd ianvs
+```
+
+2. From the root directory of Ianvs, build the `cloud-edge-collaborative-inference-for-llm` Docker image:
 ```bash 
 docker build -t ianvs-experiment-image ./examples/cloud-edge-collaborative-inference-for-llm/
 ```
 
-2. Run the image in an interactive shell:
+3. Run the image in an interactive shell:
 ```bash 
 docker run -it ianvs-experiment-image /bin/bash 
 ```
 
-3. Activate the ianvs-experiment Conda environment:
+4. Activate the ianvs-experiment Conda environment:
 ```bash 
 conda activate ianvs-experiment
 ```
 
-4. Set the required environment variables for the API (use either OpenAI or GROQ credentials):
+5. Set the required environment variables for the API (use either OpenAI or GROQ credentials):
 ```bash 
 export OPENAI_BASE_URL="https://api.openai.com/v1"
 export OPENAI_API_KEY=sk_xxxxxxxx
 ```
 (Alternatively, for GROQ, use GROQ_BASE_URL and GROQ_API_KEY.)
 
-5. Run the Ianvs benchmark:
+6. Run the Ianvs benchmark:
 ```bash 
 ianvs -f examples/cloud-edge-collaborative-inference-for-llm/benchmarkingjob.yaml
 ```
@@ -99,22 +111,15 @@ python setup.py install
 
 ##### Dataset Preparation
 
-1. Download `mmlu-5-shot` in the root directory of ianvs from [Ianvs-MMLU-5-shot](https://huggingface.co/datasets/FuryMartin/Ianvs-MMLU-5-shot), which is a transformed MMLU-5-shot dataset formatted to fit Ianvs's requirements.
+1. Download `mmlu-5-shot` in the root directory of ianvs from [Ianvs-MMLU-5-shot](https://www.kaggle.com/datasets/kubeedgeianvs/ianvs-mmlu-5shot), which is a transformed MMLU-5-shot dataset formatted to fit Ianvs's requirements.
+**Note**: To enable Docker to download datasets from Kaggle within your docker container, you need to configure the Kaggle CLI authentication token. Please follow the [official Kaggle API documentation](https://www.kaggle.com/docs/api#:~:text=is%20%24PYTHON_HOME/Scripts.-,Authentication,-In%20order%20to) to download your `kaggle.json` token. 
 ```bash
-git clone https://huggingface.co/datasets/FuryMartin/Ianvs-MMLU-5-shot
-git lfs install 
-cd Ianvs-MMLU-5-shot
-git lfs pull
-cd ..
+kaggle datasets download -d kubeedgeianvs/ianvs-mmlu-5shot
+unzip -o ianvs-mmlu-5shot.zip
+rm -rf ianvs-mmlu-5shot.zip
 ```
 
-2. Create a `dataset` folder in the root directory of Ianvs and move `mmlu-5-shot` into the `dataset` folder.
-```bash
-mkdir dataset
-mv Ianvs-MMLU-5-shot/mmlu-5-shot/ dataset/
-```
-
-3. Then, check the path of `train_data` and `test_data` in 
+2. Then, check the path of `train_data` and `test_data` in 
 `examples/cloud-edge-collaborative-inference-for-llm/testenv/testenv.yaml`.
 
     - If you created the `dataset` folder inside `ianvs/` as mentioned earlier, then the relative path is correct and does not need to be modified.
@@ -148,13 +153,9 @@ The testing process may take much time, depending on the number of test cases an
 
 To enable you directly get the results, here we provide a workspace folder with cached results of `Qwen/Qwen2.5-1.5B-Instruct`, `Qwen/Qwen2.5-3B-Instruct`,`Qwen/Qwen2.5-7B-Instruct` and `gpt-4o-mini`.
 
-You can download `workspace-mmlu` folder from [Ianvs-MMLU-5-shot](https://huggingface.co/datasets/FuryMartin/Ianvs-MMLU-5-shot) and put it under your `ianvs` folder.
+You can download `workspace-mmlu` folder from [Ianvs-MMLU-5-shot](https://www.kaggle.com/datasets/kubeedgeianvs/ianvs-mmlu-5shot) and put it under your `ianvs` folder.
 
-- Since we have already cloned the `Ianvs-MMLU-5-shot` folder. We can directly move the `workspace-mmlu` folder to the required destination.
-
-```bash
-mv Ianvs-MMLU-5-shot/workspace-mmlu/ .
-```
+- Since we have already downloaded the `Ianvs-MMLU-5-shot` folder. There is no need to do this again. 
 
 ##### Run Joint Inference example
 

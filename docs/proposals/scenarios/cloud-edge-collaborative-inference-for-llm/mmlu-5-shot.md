@@ -1,6 +1,6 @@
 # Cloud Edge Collaborative inference for LLM: the Ianvs-MMLU-5-shot dataset
 
-Download link: [Hugging Face](https://huggingface.co/datasets/FuryMartin/Ianvs-MMLU-5-shot)
+Download link: [Kaggle](https://www.kaggle.com/datasets/kubeedgeianvs/ianvs-mmlu-5shot)
 
 ## Authors
 

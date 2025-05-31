@@ -1,6 +1,6 @@
 [Quick Start]: ./quick-start.md
 [Links of scenarios]: ../proposals/scenarios/cloud-edge-collaborative-inference-for-llm/mmlu-5-shot.md
-[Ianvs-MMLU-5-shot dataset]: https://huggingface.co/datasets/FuryMartin/Ianvs-MMLU-5-shot
+[Ianvs-MMLU-5-shot dataset]: https://www.kaggle.com/datasets/kubeedgeianvs/ianvs-mmlu-5shot
 [Details of Ianvs-MMLU-5-shot dataset]: ../proposals/scenarios/cloud-edge-collaborative-inference-for-llm/mmlu-5-shot.md
 
 # How to test algorithms with Ianvs
